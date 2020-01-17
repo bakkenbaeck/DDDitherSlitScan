@@ -73,7 +73,13 @@ void draw() {
       ui.beginDraw();
         ui.clear();
         // get the selected area from PImage of cam, then draw it -10 pixels to the left of the output line
-        image(cam.get((cam.width / 2) - 10, 0, 20, cam.height - 40), drawPositionX, 40, 20, height - 50);
+        int y = 40;
+        int sourceX = (cam.width / 2) - 10;
+        int sourceWidth = 20;
+        int sourceHeight = cam.height - y;
+        int w = 20;
+        int h = height - 50;
+        image(cam.get(sourceX, 0, sourceWidth, sourceHeight), drawPositionX, y, w, h);
       ui.endDraw();
   
       frame.beginDraw();
