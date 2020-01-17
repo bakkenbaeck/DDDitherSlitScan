@@ -69,18 +69,20 @@ void draw() {
       
       drawPositionX--;
       
-      // HELP! i cannot for the life of me get ui (PGRaphic) to CLEAR!!!! it needs to clear!
-      ui.beginDraw();
-        ui.clear();
-        // get the selected area from PImage of cam, then draw it -10 pixels to the left of the output line
-        int y = 40;
-        int sourceX = (cam.width / 2) - 10;
-        int sourceWidth = 20;
-        int sourceHeight = cam.height - y;
-        int w = 20;
-        int h = height - 50;
-        image(cam.get(sourceX, 0, sourceWidth, sourceHeight), drawPositionX, y, w, h);
-      ui.endDraw();
+      if (drawPositionX < width - 30 && drawPositionX > 20) {
+        // HELP! i cannot for the life of me get ui (PGRaphic) to CLEAR!!!! it needs to clear!
+        ui.beginDraw();
+          ui.clear();
+          // get the selected area from PImage of cam, then draw it -10 pixels to the left of the output line
+          int y = 40;
+          int sourceX = (cam.width / 2) - 10;
+          int sourceWidth = 20;
+          int sourceHeight = cam.height - y;
+          int w = 20;
+          int h = height - 50;
+          image(cam.get(sourceX, 0, sourceWidth, sourceHeight), drawPositionX, y, w, h);
+        ui.endDraw();
+      }
   
       frame.beginDraw();
         image(frameGraphic, 0, 0);
