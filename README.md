@@ -1,4 +1,4 @@
-# DDDitheredSlitScan
+# ⒹⒹⒹ➌itheredSlitScan
 
 A processing project that outputs dithered slit scan images for DDD3.
 
