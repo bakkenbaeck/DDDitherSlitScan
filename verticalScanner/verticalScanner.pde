@@ -64,6 +64,7 @@ void draw() {
       ditheredImage.updatePixels();
     ditheredImage.endDraw();
     
+    // IDEA here is to display the camera image BELOW the dithered image above
     //window.beginDraw();
     //  image(camera, 0, 0, width, height);
     //  window.updatePixels();
