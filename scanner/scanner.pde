@@ -1,7 +1,7 @@
 import processing.video.*;
 
 Capture cam;
-final int MAX_LEVEL = 5;
+final int MAX_LEVEL = 6;
 int level = 4;
 int videoSliceX;
 int drawPositionX;
@@ -49,6 +49,7 @@ void setup() {
 void draw() {
   if (cam.available()) {
     cam.read();
+    cam.filter(GRAY);
     cam.loadPixels();
     
     if (scanStatus == "scanning") {
@@ -61,7 +62,7 @@ void draw() {
           ditheredImage.pixels[setPixelIndex] = cam.pixels[getPixelIndex];
         }
   
-        dither();
+        orderedDither();
         ditheredImage.updatePixels();
       ditheredImage.endDraw();
       
@@ -84,14 +85,14 @@ void draw() {
         ui.endDraw();
       }
   
-      frame.beginDraw();
-        image(frameGraphic, 0, 0);
-      frame.endDraw();
+      //frame.beginDraw();
+      //  image(frameGraphic, 0, 0);
+      //frame.endDraw();
       
       if (drawPositionX == 0) {
         ui.clear(); // BUG: this needs to CLEAR!
         scanStatus = "idle";
-        save("print/" + day() + hour() + minute() + second() + ".jpg");
+        save("print/" + day() + hour() + minute() + second() + ".png");
       }
     }
     
@@ -119,8 +120,74 @@ void mousePressed() {
   }
 }
 
+int index(int x, int y) {
+  return x + y * ditheredImage.width;
+}
+
+void floydSteinbergDither() {
+  for (int y = 0; y < ditheredImage.height-1; y++) {
+    for (int x = 1; x < ditheredImage.width-1; x++) {
+      color pix = ditheredImage.pixels[index(x, y)];
+      float oldR = red(pix);
+      float oldG = green(pix);
+      float oldB = blue(pix);
+      int factor = 12;
+      int newR = round(factor * oldR / 255) * (255/factor);
+      int newG = round(factor * oldG / 255) * (255/factor);
+      int newB = round(factor * oldB / 255) * (255/factor);
+      ditheredImage.pixels[index(x, y)] = color(newR, newG, newB);
+
+      float errR = oldR - newR;
+      float errG = oldG - newG;
+      float errB = oldB - newB;
+
+
+      int index = index(x+1, y  );
+      color c = ditheredImage.pixels[index];
+      float r = red(c);
+      float g = green(c);
+      float b = blue(c);
+      r = r + errR * 4/16.0;
+      g = g + errG * 4/16.0;
+      b = b + errB * 4/16.0;
+      ditheredImage.pixels[index] = color(r, g, b);
+
+      index = index(x-1, y+1  );
+      c = ditheredImage.pixels[index];
+      r = red(c);
+      g = green(c);
+      b = blue(c);
+      r = r + errR * 3/16.0;
+      g = g + errG * 3/16.0;
+      b = b + errB * 3/16.0;
+      ditheredImage.pixels[index] = color(r, g, b);
+
+      index = index(x, y+1);
+      c = ditheredImage.pixels[index];
+      r = red(c);
+      g = green(c);
+      b = blue(c);
+      r = r + errR * 5/16.0;
+      g = g + errG * 5/16.0;
+      b = b + errB * 5/16.0;
+      ditheredImage.pixels[index] = color(r, g, b);
+
+
+      index = index(x+1, y+1);
+      c = ditheredImage.pixels[index];
+      r = red(c);
+      g = green(c);
+      b = blue(c);
+      r = r + errR * 1/16.0;
+      g = g + errG * 1/16.0;
+      b = b + errB * 1/16.0;
+      ditheredImage.pixels[index] = color(r, g, b);
+    }
+  }
+}
+
 // This is just a run off the mill algo from the web of a dither method
-void dither() {
+void orderedDither() {
   float f = 255.0/ (pow(2, 2 * level) + 1);
 
   for (int x = 0; x < width; x++) {
