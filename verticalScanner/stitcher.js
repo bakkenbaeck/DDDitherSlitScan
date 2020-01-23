@@ -1,3 +1,7 @@
+const Jimp = require('jimp2');
+
+//https://www.npmjs.com/package/jimp2
+
 Promise.all([
   Jimp.read(`./print/${sourceFile}.png`),
   Jimp.read(`./print/${sourceFile}.png`),
