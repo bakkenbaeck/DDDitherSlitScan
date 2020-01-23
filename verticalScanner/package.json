@@ -1,0 +1,16 @@
+{
+  "name": "verticalscanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "stitcher.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ezekiel Aquino",
+  "license": "ISC",
+  "dependencies": {
+    "images": "^3.0.2",
+    "jimp": "^0.9.3",
+    "jimp2": "^2.0.0"
+  }
+}
