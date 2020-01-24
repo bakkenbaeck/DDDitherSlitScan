@@ -5,24 +5,26 @@
 import processing.video.*; //This slitscan uses live video from your webcam
 Capture camera;
 
-int videoWidth = 480;
-int videoHeight = 640;
+int videoWidth = 576;
+int videoHeight = 720;
 int currentY = 0;
 String status = "idle";
 PGraphics output;
 PGraphics ditheredImage;
 PGraphics ui;
 PGraphics window;
-boolean isNewFrame  = false;  // fresh-frame flag
+PImage BBlogo;
+boolean isNewFrame = false;  // fresh-frame flag
 
 void setup(){
-  size(480, 640);
+  //size(480, 640);
+  fullScreen(2);
   background(255);
-
-  output = createGraphics(width, 480);
+  BBlogo = loadImage("img/BBlogo.png");
+  output = createGraphics(width, height);
   ui = createGraphics(width, height);
-  ditheredImage = createGraphics(width, 480);
-  window = createGraphics(width, 480);
+  ditheredImage = createGraphics(width, height);
+  window = createGraphics(width, height);
 
   String[] cameras = Capture.list();
   camera = new Capture(this, cameras[0]); //Get the live camera feed
@@ -35,6 +37,8 @@ public void captureEvent(Capture c) {
 }
 
 void draw() {
+  cursor(BBlogo,25,12);
+
   if (isNewFrame && status == "scanning") {
     camera.filter(GRAY);
     
@@ -42,7 +46,7 @@ void draw() {
       output.copy(
         camera, // source
         0, // sx
-        currentY, // sy
+        camera.height/2, // sy
         camera.width, // sw
         currentY, // sh
         0, // dx
@@ -54,7 +58,7 @@ void draw() {
     output.endDraw();
     
     ditheredImage.beginDraw();
-      image(output.get(0, 0, width, currentY), 0, 0, width, 480);
+      image(output.get(0, 0, width, currentY), 0, 0, width, height);
       
       ditheredImage.loadPixels();
       for (int y = 0; y < floor(width * ((currentY + 2) * 1.3)) && y < ditheredImage.pixels.length; y++) {
@@ -69,19 +73,21 @@ void draw() {
     //  image(camera, 0, 0, width, height);
     //  window.updatePixels();
     //window.endDraw();
-    
-    image(ditheredImage, 0, 0, width, height);
+    pushMatrix();
+    scale(-1,1);
+    image(ditheredImage, -width, 0, width, height);
+    popMatrix();
     //image(window, 0, 0, width, height);
     
     ui.beginDraw();
       stroke(255, 0, 0);
       strokeWeight(4);
-      line(0, (currentY + 2) * 1.3, width, (currentY + 2) * 1.3);
+      line(0, (currentY + 2) * (height / width), width, (currentY + 2) * (height / width));
     ui.endDraw();
 
     if (currentY == height) {
       status = "idle";
-      save("print/" + day() + hour() + minute() + second() + ".png");
+      save("../ddd3-server/images/print/" + day() + hour() + minute() + second() + ".png");
     } else {
       currentY++;
     }
@@ -90,7 +96,7 @@ void draw() {
   }
 }
 
-void mousePressed() {
+void keyPressed() {
   if (status == "idle") {
     currentY = 0;
     status = "scanning";
@@ -100,6 +106,7 @@ void mousePressed() {
 int index(int x, int y) {
   return x + y * ditheredImage.width;
 }
+
 
 void newDither() {
   for (int y = 0; y < ditheredImage.height-1; y++) {
