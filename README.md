@@ -6,6 +6,7 @@ The final outcome is a photo-booth like installation where guests in the event t
 
 Made possible by @bakkenbaeck, @luukjanssens, @abrilmagenta, @rensverschuren
 
-
-
-
+![documentation](https://github.com/ezekielaquino/DDDitherSlitScan/blob/master/documentation1.jpg?raw=true)
+![documentation](https://github.com/ezekielaquino/DDDitherSlitScan/blob/master/documentation2.jpg?raw=true)
+![documentation](https://github.com/ezekielaquino/DDDitherSlitScan/blob/master/documentation3.jpg?raw=true)
+![documentation](https://github.com/ezekielaquino/DDDitherSlitScan/blob/master/documentation4.jpg?raw=true)
